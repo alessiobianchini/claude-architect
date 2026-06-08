@@ -1,0 +1,143 @@
+.question-card {
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.scenario-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.question-number {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.situation {
+  font-size: 16px;
+  line-height: 1.7;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--accent);
+}
+
+.prompt {
+  font-size: 18px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.option:not(.locked):hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(4px);
+}
+
+.opt-letter {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+
+.opt-text {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.6;
+  padding-top: 4px;
+}
+
+.opt-icon {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.option.correct {
+  background: var(--success-bg);
+  border-color: var(--success);
+}
+.option.correct .opt-letter {
+  background: var(--success);
+  color: white;
+}
+.option.correct .opt-icon {
+  color: var(--success);
+}
+
+.option.wrong {
+  background: var(--error-bg);
+  border-color: var(--error);
+}
+.option.wrong .opt-letter {
+  background: var(--error);
+  color: white;
+}
+.option.wrong .opt-icon {
+  color: var(--error);
+}
+
+.option.dimmed {
+  opacity: 0.4;
+}
+
+.explanation {
+  padding: 20px 24px;
+  border-radius: 12px;
+  border-left: 4px solid var(--warning);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.expl-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--warning);
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.explanation p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-main);
+}
