@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import QuestionCard from './components/QuestionCard';
 import Learning from './components/Learning';
 import questionsData from './data/questions.json';
 import guideMarkdown from './data/guide.md?raw';
-import { Trophy, ArrowRight, ArrowLeft, BookOpen, LayoutDashboard } from 'lucide-react';
+import { Trophy, ArrowRight, ArrowLeft, BookOpen, LayoutDashboard, Search, ArrowUp } from 'lucide-react';
 
 const generateSlug = (text) => {
   return text.toString().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -16,6 +16,10 @@ function App() {
   const [answers, setAnswers] = useState({});
   const [isFinished, setIsFinished] = useState(false);
   const [toc, setToc] = useState([]);
+  const [tocSearch, setTocSearch] = useState('');
+  const [activeSlug, setActiveSlug] = useState('');
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const contentAreaRef = useRef(null);
 
   const shuffleArray = (array) => {
     const newArray = [...array];
@@ -80,6 +84,36 @@ function App() {
     const el = document.getElementById(slug);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+      setActiveSlug(slug);
+    }
+  };
+
+  const handleScroll = (e) => {
+    if (currentTab !== 'learning') return;
+    
+    const scrollTop = e.target.scrollTop;
+    setShowBackToTop(scrollTop > 400);
+
+    const headings = Array.from(document.querySelectorAll('.learning-content h1, .learning-content h2'));
+    if (headings.length === 0) return;
+
+    let current = headings[0];
+    for (const heading of headings) {
+      if (heading.getBoundingClientRect().top < 150) {
+        current = heading;
+      } else {
+        break;
+      }
+    }
+    
+    if (current && current.id !== activeSlug) {
+      setActiveSlug(current.id);
+    }
+  };
+
+  const scrollToTop = () => {
+    if (contentAreaRef.current) {
+      contentAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -88,6 +122,8 @@ function App() {
   const currentQuestion = questions[currentIndex];
   const selectedOption = answers[currentIndex] || null;
   const answeredCount = Object.keys(answers).length;
+  
+  const filteredToc = toc.filter(h => h.text.toLowerCase().includes(tocSearch.toLowerCase()));
 
   return (
     <div className="app-container">
@@ -127,20 +163,44 @@ function App() {
             </div>
           </>
         ) : (
-          <>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div style={{ padding: '24px', borderBottom: '1px solid var(--panel-border)' }}>
-              <h2 style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '0.05em' }}>Table of Contents</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '0.05em', marginBottom: '16px' }}>Table of Contents</h2>
+              <div style={{ position: 'relative' }}>
+                <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input 
+                  type="text" 
+                  placeholder="Search topics..." 
+                  value={tocSearch}
+                  onChange={(e) => setTocSearch(e.target.value)}
+                  style={{ 
+                    width: '100%', padding: '10px 10px 10px 36px', borderRadius: '8px',
+                    border: '1px solid var(--panel-border)', background: 'rgba(255,255,255,0.03)',
+                    color: 'white', fontSize: '14px', outline: 'none'
+                  }}
+                />
+              </div>
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
               <ul className="toc-list">
-                {toc.map((heading, i) => (
+                {filteredToc.map((heading, i) => (
                   <li key={i} className={`toc-item level-${heading.level}`}>
-                    <button onClick={() => scrollTo(heading.slug)}>{heading.text}</button>
+                    <button 
+                      onClick={() => scrollTo(heading.slug)}
+                      className={activeSlug === heading.slug ? 'active' : ''}
+                    >
+                      {heading.text}
+                    </button>
                   </li>
                 ))}
+                {filteredToc.length === 0 && (
+                  <div style={{ color: 'var(--text-muted)', fontSize: '14px', textAlign: 'center', marginTop: '20px' }}>
+                    No topics found.
+                  </div>
+                )}
               </ul>
             </div>
-          </>
+          </div>
         )}
       </aside>
 
@@ -180,7 +240,7 @@ function App() {
           )}
         </header>
 
-        <div className="content-area">
+        <div className="content-area" ref={contentAreaRef} onScroll={handleScroll}>
           {currentTab === 'learning' ? (
             <Learning />
           ) : isFinished ? (
@@ -224,6 +284,22 @@ function App() {
             />
           )}
         </div>
+        
+        {/* Back to Top Button */}
+        {currentTab === 'learning' && showBackToTop && (
+          <button 
+            className="btn btn-primary animate-fade-in"
+            onClick={scrollToTop}
+            style={{
+              position: 'absolute', bottom: '30px', right: '30px',
+              width: '48px', height: '48px', borderRadius: '50%',
+              padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)', zIndex: 50
+            }}
+          >
+            <ArrowUp size={24} />
+          </button>
+        )}
       </main>
     </div>
   );

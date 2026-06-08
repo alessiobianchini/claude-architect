@@ -74,6 +74,15 @@
   opacity: 1;
 }
 
+.toc-item button.active {
+  opacity: 1;
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.15);
+  font-weight: 600;
+  border-left: 2px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+}
+
 .learning-container {
   flex: 1;
   min-width: 0;
@@ -155,12 +164,41 @@
   margin-bottom: 0;
 }
 
+.code-block-wrapper {
+  position: relative;
+  margin: 1.5em 0;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .learning-content pre {
   background: #0f172a;
   padding: 20px;
   border-radius: 12px;
   overflow-x: auto;
-  margin: 1.5em 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
